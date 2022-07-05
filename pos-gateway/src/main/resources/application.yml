@@ -24,6 +24,11 @@ spring:
           predicates:
             - Path=/delivery/**
           filters:
+        - id: pos-webui
+          uri: lb://pos-webui
+          predicates:
+            - Path=/**
+          filters:
 
 server:
   port: 8080

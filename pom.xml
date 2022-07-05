@@ -10,6 +10,7 @@
         <module>pos-gateway</module>
         <module>pos-delivery</module>
         <module>pos-integration</module>
+        <module>pos-webui</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

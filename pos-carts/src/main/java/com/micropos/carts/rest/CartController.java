@@ -37,11 +37,8 @@ public class CartController {
     }
 
     @PostMapping(value = "/{productId}")
-    public Mono<ResponseEntity<Boolean>> putProductById(@PathVariable String productId) {
+    public Flux<Item> putProductById(@PathVariable String productId) {
         boolean flag = cartService.putItem(productId);
-        if (flag)
-            return Mono.just(new ResponseEntity<>(flag, HttpStatus.CREATED));
-        else
-            return Mono.just(new ResponseEntity<>(flag, HttpStatus.NOT_FOUND));
-    }
+        return this.cartService.getItems();
+    } 
 }
