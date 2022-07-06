@@ -1,5 +1,6 @@
 package com.micropos.webui.control;
 
+import com.micropos.carts.model.Cart;
 import com.micropos.carts.model.Item;
 import com.micropos.products.model.Product;
 
@@ -21,13 +22,55 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class WebUIController {
     private RestTemplate restTemplate = new RestTemplate();
 
+    private Cart cart = new Cart();
+
     @GetMapping()
     public String pos(Model model) {
         Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
                 Product[].class);
         model.addAttribute("products", productResponse);
         Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        model.addAttribute("cart", cartResponse);
+        cart.setItem(cartResponse);
+        model.addAttribute("cart", cart);
+        return "index";
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam(name = "pid") String pid, Model model) {
+        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
+                Product[].class);
+        model.addAttribute("products", productResponse);
+        restTemplate.postForObject(
+                "http://localhost:8080/cart/del/" + pid, null, Item[].class);
+        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
+        cart.setItem(cartResponse);
+        model.addAttribute("cart", cart);
+        return "index";
+    }
+
+    @GetMapping("/minus")
+    public String minus(@RequestParam(name = "pid") String pid, Model model) {
+        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
+                Product[].class);
+        model.addAttribute("products", productResponse);
+        restTemplate.postForObject(
+                "http://localhost:8080/cart/min/" + pid, null, Item[].class);
+        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
+        cart.setItem(cartResponse);
+        model.addAttribute("cart", cart);
+        return "index";
+    }
+
+    @GetMapping("/clear")
+    public String clear(Model model) {
+        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
+                Product[].class);
+        model.addAttribute("products", productResponse);
+        restTemplate.postForObject(
+                "http://localhost:8080/cart/clear", null, Item[].class);
+        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
+        cart.setItem(cartResponse);
+        model.addAttribute("cart", cart);
         return "index";
     }
 
@@ -37,9 +80,19 @@ public class WebUIController {
                 Product[].class);
         model.addAttribute("products", productResponse);
         restTemplate.postForObject(
-                "http://localhost:8080/cart/" + pid, null, Item[].class);
+                "http://localhost:8080/cart/add/" + pid, null, Item[].class);
         Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        model.addAttribute("cart", cartResponse);
+        cart.setItem(cartResponse);
+        model.addAttribute("cart", cart);
         return "index";
     }
+
+    // @GetMapping("/category")
+    // public String catogory(@RequestParam(name = "cate") String cate, Model model)
+    // {
+    // model.addAttribute("products", posService.products(cate));
+    // model.addAttribute("cart", posService.getCart());
+    // model.addAttribute("categories", posService.categories());
+    // return "index";
+    // }
 }

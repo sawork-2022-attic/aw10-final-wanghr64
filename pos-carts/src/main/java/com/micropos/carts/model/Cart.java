@@ -19,6 +19,12 @@ public class Cart implements Serializable {
             products.add(product);
     }
 
+    public void setItem(Item[] items) {
+        this.items.clear();
+        for (Item item : items)
+            this.items.add(item);
+    }
+
     public boolean addItem(Item item) {
         return items.add(item);
     }
@@ -33,6 +39,14 @@ public class Cart implements Serializable {
 
     public List<Item> getItems() {
         return this.items;
+    }
+
+    public double total() {
+        double res = 0;
+        for (Item i : items) {
+            res += i.getProduct().getPrice() * i.getQuantity();
+        }
+        return res;
     }
 
     public boolean addItem(String id) {

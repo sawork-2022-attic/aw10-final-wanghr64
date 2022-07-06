@@ -42,4 +42,32 @@ public class CartServiceImpl implements CartService {
         return this.singleton_cart.addItem(id);
     }
 
+    @Override
+    public boolean delItem(String id) {
+        for (Item i : singleton_cart.getItems())
+            if (i.getProduct().getId().equals(id)) {
+                singleton_cart.getItems().remove(i);
+                return true;
+            }
+        return false;
+    }
+
+    @Override
+    public boolean modItem(String id, int num) {
+        for (Item i : singleton_cart.getItems())
+            if (i.getProduct().getId().equals(id)) {
+                i.setQuantity(i.getQuantity() - 1);
+                if (i.getQuantity() == 0)
+                    singleton_cart.getItems().remove(i);
+                return true;
+            }
+        return false;
+    }
+
+    @Override
+    public boolean clearItem() {
+        singleton_cart.getItems().clear();
+        return true;
+    }
+
 }

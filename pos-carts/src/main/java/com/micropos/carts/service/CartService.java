@@ -16,4 +16,10 @@ public interface CartService {
     public Mono<Item> getItem(String id);
 
     public boolean putItem(String id);
+
+    public boolean delItem(String id);
+
+    public boolean modItem(String id, int num);
+
+    public boolean clearItem();
 }
