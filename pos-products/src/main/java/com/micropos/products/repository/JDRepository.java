@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository
+// @Repository
 public class JDRepository implements ProductRepository {
     private List<Product> products = null;
 

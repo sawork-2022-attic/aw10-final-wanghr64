@@ -102,7 +102,7 @@
                                 <figure class="card card-product">
                                     <span class="badge-new"> NEW </span>
                                     <div class="img-wrap">
-                                        <img th:src="@{${'/images/items/'+ product.image}}">
+                                        <img th:src="@{${product.image}}">
                                         <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
                                     </div>
                                     <figcaption class="info-wrap">
@@ -139,8 +139,7 @@
                                     <tr th:each="item : ${cart.items}">
                                         <td>
                                             <figure class="media">
-                                                <div class="img-wrap"><img
-                                                        th:src="@{${'/images/items/'+ item.product.image}}"
+                                                <div class="img-wrap"><img th:src="@{${item.product.image}}"
                                                         class="img-thumbnail img-xs"></div>
                                                 <figcaption class="media-body">
                                                     <h6 class="title text-truncate"><span
@@ -197,11 +196,63 @@
                                         class="fa fa-times-circle "></i> Cancel </a>
                             </div>
                             <div class="col-md-6">
-                                <a href="#" class="btn  btn-primary btn-lg btn-block"><i class="fa fa-shopping-bag"></i>
+                                <a th:href="@{/post-order}" class="btn btn-primary btn-lg btn-block"><i
+                                        class="fa fa-shopping-bag"></i>
                                     Charge </a>
                             </div>
                         </div>
                     </div> <!-- box.// -->
+                    <div class="card">
+                        <span id="deliveries">
+                            <table class="table table-hover shopping-cart-wrap">
+                                <thead class="text-muted">
+                                    <tr>
+                                        <th scope="col">Deliveries</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <span th:each="items : ${deliveries}">
+                                        <table class="table table-hover shopping-cart-wrap">
+                                            <thead class="text-muted">
+                                                <tr>
+                                                    <th scope="col">Item</th>
+                                                    <th scope="col" width="120">Qty</th>
+                                                    <th scope="col" width="120">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="item : ${items}">
+
+                                                    <td>
+                                                        <figure class="media">
+                                                            <div class="img-wrap"><img th:src="@{${item.product.image}}"
+                                                                    class="img-thumbnail img-xs"></div>
+                                                            <figcaption class="media-body">
+                                                                <h6 class="title text-truncate"><span
+                                                                        th:text="${item.product.name}"></span></h6>
+                                                            </figcaption>
+                                                        </figure>
+                                                    </td>
+                                                    <td>
+                                                        <div class="price-wrap">
+                                                            <var class="price"><span
+                                                                    th:text="${item.quantity}"></span></var>
+                                                        </div> <!-- price-wrap .// -->
+                                                    </td>
+                                                    <td>
+                                                        <div class="price-wrap">
+                                                            <var class="price"><span
+                                                                    th:text="${item.product.price*item.quantity}"></span></var>
+                                                        </div> <!-- price-wrap .// -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <!-- </table> -->
+                                    </span>
+                                </tbody>
+                            </table>
+                        </span>
+                    </div> <!-- card.// -->
                 </div>
             </div>
         </div><!-- container //  -->

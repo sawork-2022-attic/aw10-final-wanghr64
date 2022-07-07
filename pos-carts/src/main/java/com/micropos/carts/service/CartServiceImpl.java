@@ -15,7 +15,7 @@ public class CartServiceImpl implements CartService {
 
     private Cart singleton_cart;
 
-    public CartServiceImpl() {
+    public CartServiceImpl() throws Exception {
         this.singleton_cart = new Cart();
     }
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.micropos.products.model.Product;
-import com.micropos.products.repository.JDRepository;
+import com.micropos.products.repository.AMZ;
 import com.micropos.products.service.ProductServiceImpl;
 
 public class Cart implements Serializable {
@@ -12,8 +12,8 @@ public class Cart implements Serializable {
     private List<Item> items = new ArrayList<>();
     private List<Product> products;
 
-    public Cart() {
-        Iterable<Product> iter = new JDRepository().allProducts().toIterable();
+    public Cart() throws Exception {
+        Iterable<Product> iter = new AMZ().allProducts().toIterable();
         products = new ArrayList<>();
         for (Product product : iter)
             products.add(product);

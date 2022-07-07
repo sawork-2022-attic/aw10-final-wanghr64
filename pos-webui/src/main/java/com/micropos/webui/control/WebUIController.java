@@ -20,70 +20,62 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @RequestMapping("/")
 @EnableDiscoveryClient
 public class WebUIController {
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
 
-    private Cart cart = new Cart();
+    private Cart cart;
 
-    @GetMapping()
-    public String pos(Model model) {
+    public WebUIController() throws Exception {
+        this.restTemplate = new RestTemplate();
+        this.cart = new Cart();
+    }
+
+    private void getInfo(Model model) {
         Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
                 Product[].class);
         model.addAttribute("products", productResponse);
         Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
         cart.setItem(cartResponse);
         model.addAttribute("cart", cart);
+        Item[][] deliveryResponse = restTemplate.getForObject(
+                "http://localhost:8080/delivery", Item[][].class);
+        model.addAttribute("deliveries", deliveryResponse);
+    }
+
+    @GetMapping()
+    public String pos(Model model) {
+        getInfo(model);
         return "index";
     }
 
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "pid") String pid, Model model) {
-        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
-                Product[].class);
-        model.addAttribute("products", productResponse);
         restTemplate.postForObject(
                 "http://localhost:8080/cart/del/" + pid, null, Item[].class);
-        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        cart.setItem(cartResponse);
-        model.addAttribute("cart", cart);
+        getInfo(model);
         return "index";
     }
 
     @GetMapping("/minus")
     public String minus(@RequestParam(name = "pid") String pid, Model model) {
-        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
-                Product[].class);
-        model.addAttribute("products", productResponse);
         restTemplate.postForObject(
                 "http://localhost:8080/cart/min/" + pid, null, Item[].class);
-        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        cart.setItem(cartResponse);
-        model.addAttribute("cart", cart);
+        getInfo(model);
         return "index";
     }
 
     @GetMapping("/clear")
     public String clear(Model model) {
-        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
-                Product[].class);
-        model.addAttribute("products", productResponse);
         restTemplate.postForObject(
                 "http://localhost:8080/cart/clear", null, Item[].class);
-        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        cart.setItem(cartResponse);
-        model.addAttribute("cart", cart);
+        getInfo(model);
         return "index";
     }
 
     @GetMapping("/add")
     public String addByGet(@RequestParam(name = "pid") String pid, Model model) {
-        Product[] productResponse = restTemplate.getForObject("http://localhost:8080/products",
-                Product[].class);
-        model.addAttribute("products", productResponse);
         restTemplate.postForObject(
                 "http://localhost:8080/cart/add/" + pid, null, Item[].class);
-        Item[] cartResponse = restTemplate.getForObject("http://localhost:8080/cart", Item[].class);
-        cart.setItem(cartResponse);
-        model.addAttribute("cart", cart);
+        getInfo(model);
         return "index";
     }
 
@@ -95,4 +87,13 @@ public class WebUIController {
     // model.addAttribute("categories", posService.categories());
     // return "index";
     // }
+
+    @GetMapping(value = "/post-order")
+    public String getMethodName(Model model) {
+        restTemplate.postForObject(
+                "http://localhost:8080/order", null, Item[].class);
+        getInfo(model);
+        return "index";
+    }
+
 }
